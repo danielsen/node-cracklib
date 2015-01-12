@@ -3,5 +3,17 @@
   "name" : "node-cracklib",
   "description" : "NodeJS access to cracklib functions",
   "keywords": [ "password", "cracklib", "libcrack" ],
-  "version": "0.1.0",
+  "version": "0.1.1",
+  "homepage": "https://github.com/danielsen/node-cracklib",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:danielsen/node-cracklib.git"
+  },
+  "licenses": [ {
+    "type": "GNU GPLv3",
+    "url": "https://github.com/danielsen/node-cracklib/blob/master/LICENSE"
+  }],
+  "bugs": {
+    "url": "https://github.com/danielsen/node-cracklib/issues"
+  }
 }
