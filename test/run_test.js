@@ -1,3 +1,3 @@
 var cracklib = require('../build/Release/cracklib');
 
-cracklib.checkPassword('somepassword', function (res) { console.log(res); });
+cracklib.checkPassword('y0urpA55word', function (res) { console.log(res); });
