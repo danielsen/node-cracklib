@@ -2,6 +2,11 @@ node-cracklib - C++ binding to cracklib for checking password strength.
 
 ### Installing 
 
+Note that this package requires that the cracklib development libraries 
+be installed. Installation may vary on your system but, for example on CentOS:
+
+    $yum install cracklib-devel
+
 To install via nmp:
     
     $mkdir MyApplication
