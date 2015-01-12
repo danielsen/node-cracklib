@@ -1,0 +1,22 @@
+node-cracklib - C++ binding to cracklib for checking password strength.
+
+### Building
+
+node-gyp configure -- -DMODULE\_NAME=cracklib -DBUILD_TARGET=/path/to/app
+node-gyp build clean
+
+### Usage
+
+    var cracklib = require('cracklib');
+
+    cracklib.checkPassword('mypassword', function (res) { console.log(res) });
+
+### Response
+
+The callback to checkPassword() should be able to handle a simple dictionary
+response with a single memmber, "message". "message" will be a String if the
+password check failed or Null if it passed.
+
+    {
+      "message": String | Null - Return value from the password check
+    }

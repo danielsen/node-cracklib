@@ -1,0 +1,7 @@
+{
+  "author" : "Dan Nielsen <dnielsen@reachmail.com>",
+  "name" : "node-cracklib",
+  "description" : "NodeJS access to cracklib functions",
+  "keywords": [ "password", "cracklib", "libcrack" ],
+  "version": "0.1.0",
+}
