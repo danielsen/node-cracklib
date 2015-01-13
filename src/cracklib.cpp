@@ -24,11 +24,11 @@
 using namespace v8;
 using namespace std;
 
-/* `checkPassword(password, callback)` is the Javascript access point.
+/* `fascistCheck(password)`
  * @password String
- * @callback Function
+ * @return Object
  * 
- * The callback return value will be a dictionary object with a single member
+ * The return value will be a dictionary object with a single member
  * named "message". If "message" is NULL the password is acceptable, in
  * all other cases "message" will contain the reason the password was rejected.
  */
@@ -57,6 +57,16 @@ Handle<Value> fascistCheck (const Arguments& args) {
   return scope.Close(ret);
 }
 
+/* `fascistCheckUser(password, user)` 
+ * @password String
+ * @user String | Null
+ * @return Object
+ * 
+ * The return value will be a dictionary object with a single member
+ * named "message". If "message" is NULL the password is acceptable, in
+ * all other cases "message" will contain the reason the password was rejected.
+ */
+Handle<Value> fascistCheck (const Arguments& args) {
 Handle<Value> fascistCheckUser (const Arguments& args) {
   
   HandleScope scope;
