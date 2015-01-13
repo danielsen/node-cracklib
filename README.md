@@ -11,7 +11,7 @@ To install via nmp:
     
     $mkdir MyApplication
     $cd MyApplication
-    $npm install node-cracklib
+    $npm install cracklib
 
 Or clone the repository and build from source:
 
