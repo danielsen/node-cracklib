@@ -24,18 +24,6 @@
 using namespace v8;
 using namespace std;
 
-/* Forward declarations */
-Handle<Value> Async (const Arguments& args);
-void asyncWork (uv_work_t* req);
-void asyncAfter (uv_work_t* req);
-
-struct Baton {
-  Persistent<Function> callback;
-
-  const char *msg;
-  char *password;
-};
-
 /* `checkPassword(password, callback)` is the Javascript access point.
  * @password String
  * @callback Function
@@ -44,76 +32,63 @@ struct Baton {
  * named "message". If "message" is NULL the password is acceptable, in
  * all other cases "message" will contain the reason the password was rejected.
  */
-Handle<Value> checkPassword (const Arguments& args) {
+Handle<Value> fascistCheck (const Arguments& args) {
 
   HandleScope scope;
 
-  if (!args[1]->IsFunction()) {
+  if (args.Length() < 1) {
     return ThrowException(Exception::TypeError(
-        String::New("checkPassword(<password>, <callback>)")));
+        String::New("fascistCheck(<password>)")));
   }
+
+  v8::String::Utf8Value spass(args[0]->ToString());
+  const char *passwd = *spass; 
+
+  const char *dict = GetDefaultCracklibDict();
+  char *msg = (char *) FascistCheck(passwd, dict);
+
+  Local<Object> ret = Object::New();
+  
+  if (!msg) {
+    ret->Set(String::NewSymbol("message"), Null());
+  } else {
+    ret->Set(String::NewSymbol("message"), String::NewSymbol(msg));
+  }
+  return scope.Close(ret);
+}
+
+Handle<Value> fascistCheckUser (const Arguments& args) {
+  
+  HandleScope scope;
 
   if (args.Length() < 2) {
     return ThrowException(Exception::TypeError(
-        String::New("checkPassword(<password>, <callback>)")));
+        String::New("fascistCheckUser(<password>, <user>)")));
   }
 
-  Local<Function> callback = Local<Function>::Cast(args[1]);
-
-  Baton* baton = new Baton();
-  baton->callback = Persistent<Function>::New(callback);
-
-  uv_work_t *req = new uv_work_t();
-  req->data = baton;
-
-  v8::String::Utf8Value passwd(args[0]->ToString());
-  baton->password = strdup(*passwd);
-
-  int status = uv_queue_work(uv_default_loop(), req, asyncWork,
-      (uv_after_work_cb)asyncAfter);
-
-  assert(status == 0);
-  return Undefined();
-}
-
-void asyncWork (uv_work_t* req) {
-  Baton* baton = static_cast<Baton*>(req->data);
+  v8::String::Utf8Value spass(args[0]->ToString());
+  v8::String::Utf8Value suser(args[1]->ToString());
+  const char *passwd = *spass;
+  const char *user = *suser;
 
   const char *dict = GetDefaultCracklibDict();
-  char *msg = (char *) FascistCheck(baton->password, dict);
-  baton->msg = msg;
-}
+  char *msg = (char *) FascistCheckUser(passwd, dict, user, NULL);
 
-void asyncAfter(uv_work_t* req) {
-  HandleScope scope;
-  Baton* baton = static_cast<Baton*>(req->data);
-
-  const unsigned argc = 1;
   Local<Object> ret = Object::New();
 
-  if (!baton->msg) {
+  if (!msg) {
     ret->Set(String::NewSymbol("message"), Null());
   } else {
-    ret->Set(String::NewSymbol("message"), String::NewSymbol(baton->msg));
+    ret->Set(String::NewSymbol("message"), String::NewSymbol(msg));
   }
-    
-
-  Local<Value> argv[argc] = { ret };
-
-  TryCatch try_catch;
-  baton->callback->Call(Context::GetCurrent()->Global(), argc, argv);
-  if (try_catch.HasCaught()) {
-    node::FatalException(try_catch);
-  }
-
-  baton->callback.Dispose();
-  delete baton;
-  delete req;
+  return scope.Close(ret);
 }
-
+    
 void RegisterModule(Handle<Object> target) {
-  target->Set(String::NewSymbol("checkPassword"),
-    FunctionTemplate::New(checkPassword)->GetFunction());
+  target->Set(String::NewSymbol("fascistCheck"),
+    FunctionTemplate::New(fascistCheck)->GetFunction());
+  target->Set(String::NewSymbol("fascistCheckUser"),
+    FunctionTemplate::New(fascistCheckUser)->GetFunction());
 }
 
 NODE_MODULE(cracklib, RegisterModule)
