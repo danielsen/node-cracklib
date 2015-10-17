@@ -28,13 +28,13 @@ for submission of an arbitrary user. This user need not be a valid user on
 your system, a phony username can be used, as can `null` or an empty string.
 
     var cracklib = require('cracklib');
-    console.log(cracklib.checkPassword('pA5sword'));
-    console.log(cracklib.checkPasswordUser('pA5sword', null));
+    console.log(cracklib.fascistCheck('pA5sword'));
+    console.log(cracklib.fascistCheckUser('pA5sword', null));
 
 ### Response
 
 The response to either function will be a simple dictionary response with a 
-single memmber, "message". "message" will be a String if the
+single member, "message". "message" will be a String if the
 password check failed or Null if it passed.
 
     {
@@ -43,4 +43,4 @@ password check failed or Null if it passed.
 
 ### Support
 
-Please file bugs, issues, etc. at [https://github.com/danielsen/node-cracklib/issues].
+Please file bugs, issues, etc. at https://github.com/danielsen/node-cracklib/issues.

@@ -42,10 +42,10 @@ Handle<Value> fascistCheck (const Arguments& args) {
   }
 
   v8::String::Utf8Value spass(args[0]->ToString());
-  const char *passwd = *spass; 
 
-  const char *dict = GetDefaultCracklibDict();
-  char *msg = (char *) FascistCheck(passwd, dict);
+  const char *passwd  = *spass; 
+  const char *dict    = GetDefaultCracklibDict();
+  char *msg           = (char*)FascistCheck(passwd, dict);
 
   Local<Object> ret = Object::New();
   
@@ -66,7 +66,6 @@ Handle<Value> fascistCheck (const Arguments& args) {
  * named "message". If "message" is NULL the password is acceptable, in
  * all other cases "message" will contain the reason the password was rejected.
  */
-Handle<Value> fascistCheck (const Arguments& args) {
 Handle<Value> fascistCheckUser (const Arguments& args) {
   
   HandleScope scope;
@@ -78,11 +77,11 @@ Handle<Value> fascistCheckUser (const Arguments& args) {
 
   v8::String::Utf8Value spass(args[0]->ToString());
   v8::String::Utf8Value suser(args[1]->ToString());
-  const char *passwd = *spass;
-  const char *user = *suser;
 
-  const char *dict = GetDefaultCracklibDict();
-  char *msg = (char *) FascistCheckUser(passwd, dict, user, NULL);
+  const char *passwd  = *spass;
+  const char *user    = *suser;
+  const char *dict    = GetDefaultCracklibDict();
+  char *msg           = (char*)FascistCheckUser(passwd, dict, user, NULL);
 
   Local<Object> ret = Object::New();
 
