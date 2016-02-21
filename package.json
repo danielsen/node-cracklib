@@ -1,20 +1,30 @@
 {
-  "author" : "Dan Nielsen <dnielsen@reachmail.com>",
-  "name" : "cracklib",
-  "description" : "NodeJS access to cracklib functions",
-  "keywords": [ "password", "cracklib", "libcrack", "security" ],
-  "version": "0.2.1",
+  "author": "Dan Nielsen <dnielsen@reachmail.com>",
+  "name": "cracklib",
+  "description": "NodeJS access to cracklib functions",
+  "keywords": [
+    "password",
+    "cracklib",
+    "libcrack",
+    "security"
+  ],
+  "version": "0.3.0",
   "main": "index.js",
   "homepage": "https://github.com/danielsen/node-cracklib",
   "repository": {
     "type": "git",
     "url": "git@github.com:danielsen/node-cracklib.git"
   },
-  "licenses": [ {
-    "type": "GNU GPLv3",
-    "url": "https://github.com/danielsen/node-cracklib/blob/master/LICENSE"
-  }],
+  "licenses": [
+    {
+      "type": "GNU GPLv3",
+      "url": "https://github.com/danielsen/node-cracklib/blob/master/LICENSE"
+    }
+  ],
   "bugs": {
     "url": "https://github.com/danielsen/node-cracklib/issues"
+  },
+  "dependencies": {
+    "nan": "^2.2.0"
   }
 }

@@ -16,6 +16,7 @@
  */
 
 #include <v8.h>
+#include <nan.h>
 #include <node.h>
 #include <crack.h>
 #include <string.h>
@@ -24,80 +25,78 @@
 using namespace v8;
 using namespace std;
 
-/* `fascistCheck(password)`
- * @password String
- * @return Object
+/*!
+ * \brief   Checks a password against the default cracklib dictionary
+ * \param   password Password string to check
+ * \return  Cracklib check result
  * 
  * The return value will be a dictionary object with a single member
  * named "message". If "message" is NULL the password is acceptable, in
  * all other cases "message" will contain the reason the password was rejected.
  */
-Handle<Value> fascistCheck (const Arguments& args) {
+void fascistCheck (const Nan::FunctionCallbackInfo<v8::Value>& info) {
 
-  HandleScope scope;
-
-  if (args.Length() < 1) {
-    return ThrowException(Exception::TypeError(
-        String::New("fascistCheck(<password>)")));
+  if (info.Length() < 1) {
+    Nan::ThrowError(Nan::Error("fascistCheck(password)"));
   }
 
-  v8::String::Utf8Value spass(args[0]->ToString());
+  v8::String::Utf8Value spass(info[0]->ToString());
 
   const char *passwd  = *spass; 
   const char *dict    = GetDefaultCracklibDict();
   char *msg           = (char*)FascistCheck(passwd, dict);
 
-  Local<Object> ret = Object::New();
-  
+  v8::Local<v8::Object> ret = Nan::New<v8::Object>();
+
   if (!msg) {
-    ret->Set(String::NewSymbol("message"), Null());
+    Nan::Set(ret, Nan::New("message").ToLocalChecked(), Nan::Null());
   } else {
-    ret->Set(String::NewSymbol("message"), String::NewSymbol(msg));
+    Nan::Set(ret, Nan::New("message").ToLocalChecked(), 
+      Nan::New(msg).ToLocalChecked());
   }
-  return scope.Close(ret);
+  info.GetReturnValue().Set(ret);
 }
 
-/* `fascistCheckUser(password, user)` 
- * @password String
- * @user String | Null
- * @return Object
+/*!
+ * \brief   Checks a password / user combination against the default cracklib
+ *          dictionary.
+ * \param   password  Password string to check
+ * \return  Cracklib check result
  * 
  * The return value will be a dictionary object with a single member
  * named "message". If "message" is NULL the password is acceptable, in
  * all other cases "message" will contain the reason the password was rejected.
  */
-Handle<Value> fascistCheckUser (const Arguments& args) {
+void fascistCheckUser (const Nan::FunctionCallbackInfo<v8::Value>& info) {
   
-  HandleScope scope;
-
-  if (args.Length() < 2) {
-    return ThrowException(Exception::TypeError(
-        String::New("fascistCheckUser(<password>, <user>)")));
+  if (info.Length() < 2) {
+    Nan::ThrowError(Nan::Error("fascistCheckUser(<password>, <user>)"));
   }
 
-  v8::String::Utf8Value spass(args[0]->ToString());
-  v8::String::Utf8Value suser(args[1]->ToString());
+  v8::String::Utf8Value spass(info[0]->ToString());
+  v8::String::Utf8Value suser(info[1]->ToString());
 
   const char *passwd  = *spass;
   const char *user    = *suser;
   const char *dict    = GetDefaultCracklibDict();
   char *msg           = (char*)FascistCheckUser(passwd, dict, user, NULL);
 
-  Local<Object> ret = Object::New();
+  v8::Local<v8::Object> ret = Nan::New<v8::Object>();
 
   if (!msg) {
-    ret->Set(String::NewSymbol("message"), Null());
+    Nan::Set(ret, Nan::New("message").ToLocalChecked(), Nan::Null());
   } else {
-    ret->Set(String::NewSymbol("message"), String::NewSymbol(msg));
+    Nan::Set(ret, Nan::New("message").ToLocalChecked(), 
+      Nan::New(msg).ToLocalChecked());
   }
-  return scope.Close(ret);
+  info.GetReturnValue().Set(ret);
 }
     
-void RegisterModule(Handle<Object> target) {
-  target->Set(String::NewSymbol("fascistCheck"),
-    FunctionTemplate::New(fascistCheck)->GetFunction());
-  target->Set(String::NewSymbol("fascistCheckUser"),
-    FunctionTemplate::New(fascistCheckUser)->GetFunction());
+void InitAll(v8::Local<v8::Object> exports) {
+  exports->Set(Nan::New("fascistCheck").ToLocalChecked(),
+    Nan::New<v8::FunctionTemplate>(fascistCheck)->GetFunction());
+  exports->Set(Nan::New("fascistCheckUser").ToLocalChecked(),
+    Nan::New<v8::FunctionTemplate>(fascistCheckUser)->GetFunction());
 }
 
-NODE_MODULE(cracklib, RegisterModule)
+NODE_MODULE(cracklib, InitAll)
