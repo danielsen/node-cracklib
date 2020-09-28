@@ -40,7 +40,8 @@ void fascistCheck (const Nan::FunctionCallbackInfo<v8::Value>& info) {
     Nan::ThrowError(Nan::Error("fascistCheck(password)"));
   }
 
-  v8::String::Utf8Value spass(info[0]->ToString());
+  v8::Isolate* isolate = info.GetIsolate();
+  v8::String::Utf8Value spass(isolate, info[0]);
 
   const char *passwd  = *spass; 
   const char *dict    = GetDefaultCracklibDict();
@@ -73,8 +74,9 @@ void fascistCheckUser (const Nan::FunctionCallbackInfo<v8::Value>& info) {
     Nan::ThrowError(Nan::Error("fascistCheckUser(<password>, <user>)"));
   }
 
-  v8::String::Utf8Value spass(info[0]->ToString());
-  v8::String::Utf8Value suser(info[1]->ToString());
+  v8::Isolate* isolate = info.GetIsolate();
+  v8::String::Utf8Value spass(isolate, info[0]);
+  v8::String::Utf8Value suser(isolate, info[1]);
 
   const char *passwd  = *spass;
   const char *user    = *suser;
@@ -93,10 +95,16 @@ void fascistCheckUser (const Nan::FunctionCallbackInfo<v8::Value>& info) {
 }
     
 void InitAll(v8::Local<v8::Object> exports) {
-  exports->Set(Nan::New("fascistCheck").ToLocalChecked(),
-    Nan::New<v8::FunctionTemplate>(fascistCheck)->GetFunction());
-  exports->Set(Nan::New("fascistCheckUser").ToLocalChecked(),
-    Nan::New<v8::FunctionTemplate>(fascistCheckUser)->GetFunction());
+  v8::Local<v8::Context> context = exports->CreationContext();
+
+  exports->Set(context,
+    Nan::New("fascistCheck").ToLocalChecked(),
+    Nan::New<v8::FunctionTemplate>(fascistCheck)
+      ->GetFunction(context).ToLocalChecked());
+  exports->Set(context,
+    Nan::New("fascistCheckUser").ToLocalChecked(),
+    Nan::New<v8::FunctionTemplate>(fascistCheckUser)
+      ->GetFunction(context).ToLocalChecked());
 }
 
 NODE_MODULE(cracklib, InitAll)
