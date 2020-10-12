@@ -13,7 +13,7 @@
   "homepage": "https://github.com/danielsen/node-cracklib",
   "repository": {
     "type": "git",
-    "url": "git@github.com:danielsen/node-cracklib.git"
+    "url": "git+ssh://git@github.com/danielsen/node-cracklib.git"
   },
   "licenses": [
     {
@@ -26,5 +26,13 @@
   },
   "dependencies": {
     "nan": "^2.2.0"
-  }
+  },
+  "scripts": {
+    "install": "node-gyp rebuild"
+  },
+  "gypfile": true,
+  "directories": {
+    "test": "test"
+  },
+  "license": "GPL-3.0"
 }
