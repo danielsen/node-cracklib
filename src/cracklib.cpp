@@ -28,6 +28,7 @@ using namespace std;
 /*!
  * \brief   Checks a password against the default cracklib dictionary
  * \param   password Password string to check
+ * \param   dictionaryPath Optional path to custom dictionary.
  * \return  Cracklib check result
  * 
  * The return value will be a dictionary object with a single member
@@ -37,15 +38,23 @@ using namespace std;
 void fascistCheck (const Nan::FunctionCallbackInfo<v8::Value>& info) {
 
   if (info.Length() < 1) {
-    Nan::ThrowError(Nan::Error("fascistCheck(password)"));
+    Nan::ThrowError(Nan::Error("fascistCheck(password[, dictionaryPath])"));
   }
 
   v8::Isolate* isolate = info.GetIsolate();
   v8::String::Utf8Value spass(isolate, info[0]);
 
-  const char *passwd  = *spass; 
-  const char *dict    = GetDefaultCracklibDict();
-  char *msg           = (char*)FascistCheck(passwd, dict);
+  const char *passwd = *spass; 
+  const char *dict;
+
+  if (info.Length() == 2) {
+    v8::String::Utf8Value sdict(isolate, info[1]);
+    dict = strdup(*sdict);
+  } else {
+    dict = GetDefaultCracklibDict();
+  }
+
+  char *msg = (char*)FascistCheck(passwd, dict);
 
   v8::Local<v8::Object> ret = Nan::New<v8::Object>();
 
@@ -62,6 +71,8 @@ void fascistCheck (const Nan::FunctionCallbackInfo<v8::Value>& info) {
  * \brief   Checks a password / user combination against the default cracklib
  *          dictionary.
  * \param   password  Password string to check
+ * \param   user User to check.
+ * \param   dictionaryPath Optional path to custom dictionary.
  * \return  Cracklib check result
  * 
  * The return value will be a dictionary object with a single member
@@ -71,7 +82,7 @@ void fascistCheck (const Nan::FunctionCallbackInfo<v8::Value>& info) {
 void fascistCheckUser (const Nan::FunctionCallbackInfo<v8::Value>& info) {
   
   if (info.Length() < 2) {
-    Nan::ThrowError(Nan::Error("fascistCheckUser(<password>, <user>)"));
+    Nan::ThrowError(Nan::Error("fascistCheckUser(password, user[, dictionaryPath])"));
   }
 
   v8::Isolate* isolate = info.GetIsolate();
@@ -80,7 +91,14 @@ void fascistCheckUser (const Nan::FunctionCallbackInfo<v8::Value>& info) {
 
   const char *passwd  = *spass;
   const char *user    = *suser;
-  const char *dict    = GetDefaultCracklibDict();
+  const char *dict;
+
+  if (info.Length() == 3) {
+    v8::String::Utf8Value sdict(isolate, info[1]);
+    dict = strdup(*sdict);
+  } else {
+    dict = GetDefaultCracklibDict();
+  }
   char *msg           = (char*)FascistCheckUser(passwd, dict, user, NULL);
 
   v8::Local<v8::Object> ret = Nan::New<v8::Object>();

@@ -8,7 +8,7 @@
     "libcrack",
     "security"
   ],
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "index.js",
   "homepage": "https://github.com/danielsen/node-cracklib",
   "repository": {
@@ -25,7 +25,7 @@
     "url": "https://github.com/danielsen/node-cracklib/issues"
   },
   "dependencies": {
-    "nan": "^2.2.0"
+    "nan": "^2.14.2"
   },
   "scripts": {
     "install": "node-gyp rebuild"
